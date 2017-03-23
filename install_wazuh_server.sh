@@ -4,7 +4,8 @@
 
 #TODO:
 # update_ruleset.py not working yet
-
+# install api not non-interactive
+# yum install filebeat not non-interactive
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
