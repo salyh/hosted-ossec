@@ -44,9 +44,9 @@ cp /snort*/etc/*.conf* /etc/snort
 cp /snort*/etc/*.map /etc/snort
 
 
-wget https://www.snort.org/rules/community -O community.tar.gz
-tar -xvf community.tar.gz -C ~/
-cp community-rules/* /etc/snort/rules
+wget https://www.snort.org/rules/community -O /community.tar.gz
+tar -xvf community.tar.gz -C /
+cp /community-rules/* /etc/snort/rules
 sed -i 's/include \$RULE\_PATH/#include \$RULE\_PATH/' /etc/snort/snort.conf
 
 #set conf /etc/snort/snort.conf
