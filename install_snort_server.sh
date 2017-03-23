@@ -43,14 +43,14 @@ chown -R snort:snort /usr/local/lib/snort_dynamicrules
 cp /snort*/etc/*.conf* /etc/snort
 cp /snort*/etc/*.map /etc/snort
 
-
 wget https://www.snort.org/rules/community -O /community.tar.gz
 tar -xvf /community.tar.gz -C /
 cp /community-rules/* /etc/snort/rules
 sed -i 's/include \$RULE\_PATH/#include \$RULE\_PATH/' /etc/snort/snort.conf
 
-#set conf /etc/snort/snort.conf
-
+cp "$DIR/snort.conf.tpl" /etc/snort/snort.conf
 
 snort -T -c /etc/snort/snort.conf
+snort --pcap-dir=/home/foo/pcaps
+sudo snort -A console -q -i <interface> -u snort -g snort -c /etc/snort/snort.conf
 #snort -i <interface> -u snort -g snort -c /etc/snort/snort.conf
