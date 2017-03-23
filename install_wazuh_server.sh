@@ -33,13 +33,14 @@ openssl req -new -x509 -key /var/ossec/etc/sslmanager.key -out /var/ossec/etc/ss
 /var/ossec/bin/ossec-control start
 /var/ossec/bin/ossec-authd -p 1515 -a >/dev/null 2>&1 &
 cd /
-mkdir -p /var/ossec/ruleset
+rm -rf wazuh-ruleset
 git clone https://github.com/wazuh/wazuh-ruleset
 cd wazuh-ruleset
 #./update_ruleset.py -rfd
 cd /
 curl --silent --location https://rpm.nodesource.com/setup_6.x | bash -
 yum -y install nodejs
+rm -rf wazuh-api
 git clone https://github.com/wazuh/wazuh-api
 cd wazuh-api
 ./install_api.sh
