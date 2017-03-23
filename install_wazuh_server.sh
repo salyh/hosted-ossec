@@ -1,7 +1,7 @@
 #!/bin/bash
 #udp 1514
 #tcp 1515
-
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 set -e
 
@@ -13,13 +13,14 @@ ELASTIC_HOST="https://9afbe6de76d467ba76d3bacda75a6006.us-east-1.aws.found.io:92
 ELASTIC_USER="elastic"
 ELASTIC_PASSWD="zoERW3xdkDHEUXimrbdcMLGJ"
 
-yum -y install make gcc git openssl-devel openssl
+yum -y -q update
+yum -y -q install make gcc git openssl-devel openssl
 cd /
 BRANCH="master" #stable
 rm -rf ossec-wazuh
 git clone -b $BRANCH https://github.com/wazuh/wazuh.git ossec-wazuh
 cd ossec-wazuh
-cat /wazuh_server.conf > etc/preloaded-vars.conf
+cat "$DIR/wazuh_server.conf" > etc/preloaded-vars.conf
 ./install.sh
 echo $(openssl rand -base64 32) > /var/ossec/etc/authd.pass
 openssl genrsa -out /var/ossec/etc/sslmanager.key 2048
