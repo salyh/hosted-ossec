@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 yum -y install make gcc git flex bison libpcap-devel libdnet-devel.x86_64 zlib-devel libnghttp2-devel --enablerepo=epel
 
 #https://www.upcloud.com/support/installing-snort-on-centos/

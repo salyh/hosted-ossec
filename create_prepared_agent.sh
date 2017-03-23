@@ -1,6 +1,7 @@
 #!/bin/bash
 #export API_KEY=abcdef
 #curl --silent --location https://xxxx/ossec_agent/install | sudo bash -
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 set -e
 #rpm or deb?
 #install latest ossec agent deb/rpm
@@ -15,10 +16,45 @@ check_cmd() {
   fi
 }
 
+
+
+
+create_cronjob() {
+
+	#cat >/root/tcpdump_cronjob.sh <<'EOF'
+	#!/usr/bin/env bash
+	
+	#PROCESS_NUM=$(ps -ef | grep "tcpdump" | grep -v "grep" | wc -l)
+	
+	
+	
+	#tcpdump -G 5 -C 1 -i any -K -nn -w /root/trace-%Y-%m-%d_%H:%M:%S.pcap &
+	#EOF
+
+	#chmod +x /root/tcpdump_cronjob.sh
+
+	crontab -l > /tmp/rootcron.tmp 2>/dev/null
+
+	if [[ $(cat /tmp/rootcron.tmp) != *"tcpdump_cronjob"* ]]
+	then
+		   echo "* * * * * /usr/bin/flock -w 0 /var/tcpdump.lock $DIR/tcpdmps3.sh" >> /tmp/rootcron.tmp
+		   crontab /tmp/rootcron.tmp
+	else
+		   :
+	fi
+
+	rm -rf /tmp/rootcron.tmp
+
+}
+
 OSSEC_MANAGER_IP="54.191.154.184"
 #SNORT=1
 
+
+echo "client $OSSEC_MANAGER_IP" > /client
+
 if check_cmd yum; then
+    yum install -y inotify-tools aws-cli tcpdump --enablerepo=epel
     yum install -y https://ossec.wazuh.com/el/7/x86_64/ossec-hids-agent-2.8.3-4.el7.x86_64.rpm
 else
 	apt-get install -yqq expect
@@ -45,37 +81,17 @@ sed -i'' "s/RPLC_IP/$OSSEC_MANAGER_IP/" /var/ossec/etc/ossec.conf
 
 if [ -z "$SNORT" ]; then
    sed -i'' 's/RPLC_PROFILE/default/' /var/ossec/etc/ossec.conf
-   
-   #tcpdump -G 5 -C 1 -i any -K -nn -w trace-%Y-%m-%d_%H:%M:%S.pcap
-   #aws s3api put-bucket-accelerate-configuration --bucket bucketname --accelerate-configuration Status=Enabled
-   #aws s3 cp file.txt s3://ossecondkunde1/123 --region us-west-2
-   
+   create_cronjob   
 else
    sed -i'' 's/RPLC_PROFILE/snort/' /var/ossec/etc/ossec.conf
-   
+   echo "snort" > /snort_installed
    ./install_snort_server.sh
-   
-   
 fi
 
 #this needs to be secured via ssl certificates
 /var/ossec/bin/agent-auth -m "$OSSEC_MANAGER_IP"
 /var/ossec/bin/ossec-control restart
 #/var/ossec/bin/ossec-agentd -f -d
-
-
-
-
-#tcpdump -s 0 port ftp or ssh -i eth0 -w mycap.pcap
-#https://enterprise.cloudshark.org/blog/streaming-live-captures-to-cloudshark/
-
-
-
-#send events
-
-#An Amazon Simple Notification Service (Amazon SNS) topic – A web service that coordinates and manages the delivery or sending of messages to subscribing endpoints or clients.
-#An Amazon Simple Queue Service (Amazon SQS) queue – Offers reliable and scalable hosted queues for storing messages as they travel between computer.
-#A Lambda function – AWS Lambda is a compute service where you can upload your code and the service can run the code on your behalf using the AWS infrastructure. You package up and upload your custom code to AWS Lambda when you create a Lambda function
 
 #get ip address
 
