@@ -11,7 +11,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 set -e
 
-ID="ccossec1"
+ID="ccossec2"
 
 echo "$ID" > /ID
 
