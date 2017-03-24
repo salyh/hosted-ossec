@@ -62,11 +62,21 @@ cp redis-server redis-cli /usr/local/bin
 
 export REDIS_HOST="ossecredis.jyu98g.0001.usw2.cache.amazonaws.com"
 
-while read p; do
-  echo "proc $p"
-  redis-cli -h "$REDIS_HOST" --raw HGET $p pcap | snort -c /etc/snort/snort.conf -r -
+while true; do  
+
+	echo "chk redis"
+
+	while read p; do
+	  echo "proc $p"
+	  redis-cli -h "$REDIS_HOST" --raw HGET "$p" pcap | snort -c /etc/snort/snort.conf -r -
+	  redis-cli -h "$REDIS_HOST" del "$p"
   
-done < ./redis-cli -h "$REDIS_HOST" KEYS "trace*pcap" | awk '{print $1}'
+	done < ./redis-cli -h "$REDIS_HOST" KEYS "trace*pcap" | awk '{print $1}' ;
+
+	sleep 5;
+
+done
+
 #trace-h2-ip-172-31-2-100-2017-03-24_14:05:11.pcap
 #trace-h2-ip-172-31-2-100-2017-03-24_14:38:16.pcap
 #trace-h2-ip-172-31-2-100-2017-03-24_14:19:03.pcap
