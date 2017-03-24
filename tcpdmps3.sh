@@ -13,7 +13,7 @@ while true; do
 
 	inotifywait -mrq -e close_write --format %w%f "$TPATH/" | while read FILE
 	do
-		./redis-cli -h "$REDIS_HOST" -x HSET "$(basename $FILE)" pcap < "$FILE"
+		redis-cli -h "$REDIS_HOST" -x HSET "$(basename $FILE)" pcap < "$FILE"
 		echo "$FILE closed and stored as $(basename $FILE) in $REDIS_HOST"
         #redis-cli --raw HGET some_key image_binary > img.jpg
 		#redis-cli --raw get 'imagedata' >test.png
@@ -22,7 +22,7 @@ while true; do
 		#aws s3 cp "$FILE" "s3://ossecondkunde1/123/$(basename $FILE)" --region us-west-2
 	done &
 
-	tcpdump -G 3 -C 1 -i any -K -nn -Z root -w "$TPATH/trace-h2-$(hostname)-%Y-%m-%d_%H:%M:%S.pcap" "(dst ! $REDIS_HOST)" &
+	tcpdump -G 3 -C 1 -i eth0 -K -nn -Z root -w "$TPATH/trace-h2-$(hostname)-%Y-%m-%d_%H:%M:%S.pcap" "(dst ! $REDIS_HOST)" &
 
     echo "recording ..."
 	wait

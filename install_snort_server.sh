@@ -53,24 +53,23 @@ cp "$DIR/snort.conf.tpl" /etc/snort/snort.conf
 
 snort -T -c /etc/snort/snort.conf
 
-cd /
-wget http://download.redis.io/releases/redis-3.2.8.tar.gz
-tar xvfz redis-3.2.8.tar.gz
-cd redis-3.2.8
-make
-cd src
-cp redis-server redis-cli /usr/local/bin
 
 
+set +e
 
 while true; 
 do  
 	echo "chk redis"
     LIST="$(redis-cli -h "$REDIS_HOST" KEYS "trace*pcap" | awk '{print $1}')"
 	while read -r p; do
+	
+      if [ "x$p" == "x" ]; then
+         break
+      fi	
+	
 	  echo "proc $p"
-	  redis-cli -h "$REDIS_HOST" --raw HGET "$p" pcap | snort -c /etc/snort/snort.conf -r -
-	  redis-cli -h "$REDIS_HOST" del "$p"
+	  redis-cli -h "$REDIS_HOST" --raw HGET "$p" pcap | snort -c /etc/snort/snort.conf -r - > /dev/null 2>&1
+	  redis-cli -h "$REDIS_HOST" del "$p" > /dev/null
 	done <<< "$LIST"
 	sleep 5
 done

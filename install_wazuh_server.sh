@@ -64,6 +64,16 @@ cat >/var/ossec/etc/shared/agent.conf <<EOL
         <location>/var/log/kern.log</location>
         <log_format>syslog</log_format>
     </localfile>
+    
+    <localfile>
+        <location>/var/log/messages</location>
+        <log_format>syslog</log_format>
+    </localfile>
+    
+    <localfile>
+        <location>/var/log/secure</location>
+        <log_format>syslog</log_format>
+    </localfile>
 
     <localfile>
         <location>/var/log/auth.log</location>
