@@ -56,15 +56,6 @@ create_cronjob() {
 echo "client $OSSEC_MANAGER_IP" > /client
 
 
-cd /
-wget http://download.redis.io/releases/redis-3.2.8.tar.gz
-tar xvfz redis-3.2.8.tar.gz
-cd redis-3.2.8
-make distclean  
-make
-cd src
-cp redis-server redis-cli /usr/local/bin
-
 if check_cmd yum; then
     yum install -y inotify-tools aws-cli tcpdump --enablerepo=epel
     yum -y install make gcc git flex bison libpcap-devel pcre-devel libdnet-devel.x86_64 zlib-devel libnghttp2-devel --enablerepo=epel
@@ -77,6 +68,15 @@ else
 	DEBIAN_FRONTEND=noninteractive dpkg -i --force-all $TMPFILE 
 	rm -f $TMPFILE 
 fi
+
+cd /
+wget http://download.redis.io/releases/redis-3.2.8.tar.gz
+tar xvfz redis-3.2.8.tar.gz
+cd redis-3.2.8
+make distclean  
+make
+cd src
+cp redis-server redis-cli /usr/local/bin
 
 mv /var/ossec/etc/ossec.conf /var/ossec/etc/ossec.conf.orig
 
