@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-yum -y install make gcc git flex bison libpcap-devel pcre-devel libdnet-devel.x86_64 zlib-devel libnghttp2-devel --enablerepo=epel
+yum -y install make gcc git flex bison libpcap-devel pcre-devel libdnet-devel.x86_64 zlib-devel libnghttp2-devel xz-devel --enablerepo=epel
 
 #https://www.upcloud.com/support/installing-snort-on-centos/
 export REDIS_HOST="ossecredis.jyu98g.0001.usw2.cache.amazonaws.com"
