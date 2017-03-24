@@ -89,8 +89,11 @@ cat >/var/ossec/etc/ossec.conf <<EOL
 </ossec_config>
 EOL
 
-
 sed -i'' "s/RPLC_IP/$OSSEC_MANAGER_IP/" /var/ossec/etc/ossec.conf
+
+/var/ossec/bin/agent-auth -m "$OSSEC_MANAGER_IP"
+/var/ossec/bin/ossec-control restart
+
 
 if [ -z "$SNORT" ]; then
    sed -i'' 's/RPLC_PROFILE/default/' /var/ossec/etc/ossec.conf
@@ -102,8 +105,7 @@ else
 fi
 
 #this needs to be secured via ssl certificates
-/var/ossec/bin/agent-auth -m "$OSSEC_MANAGER_IP"
-/var/ossec/bin/ossec-control restart
+
 #/var/ossec/bin/ossec-agentd -f -d
 
 #get ip address

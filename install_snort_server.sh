@@ -44,11 +44,12 @@ chown -R snort:snort /usr/local/lib/snort_dynamicrules
 cp /snort*/etc/*.conf* /etc/snort
 cp /snort*/etc/*.map /etc/snort
 
-wget https://www.snort.org/rules/community -O /community.tar.gz
-tar -xvf /community.tar.gz -C /
-cp /community-rules/* /etc/snort/rules
-sed -i 's/include \$RULE\_PATH/#include \$RULE\_PATH/' /etc/snort/snort.conf
+#wget https://www.snort.org/rules/community -O /community.tar.gz
+#tar -xvf /community.tar.gz -C /
+#cp /community-rules/* /etc/snort/rules
+#sed -i 's/include \$RULE\_PATH/#include \$RULE\_PATH/' /etc/snort/snort.conf
 
+cp "$DIR/snort_rules/*" /etc/
 cp "$DIR/snort.conf.tpl" /etc/snort/snort.conf
 
 snort -T -c /etc/snort/snort.conf
@@ -68,9 +69,12 @@ do
       fi	
 	
 	  echo "proc $p"
-	  redis-cli -h "$REDIS_HOST" --raw HGET "$p" pcap | snort -c /etc/snort/snort.conf -r - > /dev/null 2>&1
-	  redis-cli -h "$REDIS_HOST" del "$p" > /dev/null
+	  redis-cli -h "$REDIS_HOST" --raw HGET "$p" pcap | head -c-1 | snort -c /etc/snort/snort.conf -r - > /dev/null 2>&1 \
+	  && redis-cli -h "$REDIS_HOST" del "$p" > /dev/null && echo "  - Success"
 	done <<< "$LIST"
+	
+	echo "/var/log/snort/snort_alert.full $(cat /var/log/snort/snort_alert.full)"
+	
 	sleep 5
 done
 

@@ -56,7 +56,7 @@ cat >/var/ossec/etc/shared/agent.conf <<EOL
 
     <!-- only relevant for snort agent -->
     <localfile profile="snort">
-       <location>/snort-full.log</location>
+       <location>/var/log/snort/snort_alert.full</location>
        <log_format>snort-full</log_format>
     </localfile>
 
