@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-yum -y install make gcc git flex bison libpcap-devel libdnet-devel.x86_64 zlib-devel libnghttp2-devel --enablerepo=epel
+yum -y install make gcc git flex bison libpcap-devel pcre-devel libdnet-devel.x86_64 zlib-devel libnghttp2-devel --enablerepo=epel
 
 #https://www.upcloud.com/support/installing-snort-on-centos/
 
@@ -62,19 +62,16 @@ cp redis-server redis-cli /usr/local/bin
 
 export REDIS_HOST="ossecredis.jyu98g.0001.usw2.cache.amazonaws.com"
 
-while true; do  
-
+while true; 
+do  
 	echo "chk redis"
-
-	while read p; do
+    LIST="$(redis-cli -h "$REDIS_HOST" KEYS "trace*pcap" | awk '{print $1}')"
+	while read -r p; do
 	  echo "proc $p"
 	  redis-cli -h "$REDIS_HOST" --raw HGET "$p" pcap | snort -c /etc/snort/snort.conf -r -
 	  redis-cli -h "$REDIS_HOST" del "$p"
-  
-	done < ./redis-cli -h "$REDIS_HOST" KEYS "trace*pcap" | awk '{print $1}' ;
-
-	sleep 5;
-
+	done <<< "$LIST"
+	sleep 5
 done
 
 #trace-h2-ip-172-31-2-100-2017-03-24_14:05:11.pcap
