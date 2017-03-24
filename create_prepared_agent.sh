@@ -94,6 +94,7 @@ sed -i'' "s/RPLC_IP/$OSSEC_MANAGER_IP/" /var/ossec/etc/ossec.conf
 /var/ossec/bin/agent-auth -m "$OSSEC_MANAGER_IP"
 /var/ossec/bin/ossec-control restart
 
+cd "$DIR"
 
 if [ -z "$SNORT" ]; then
    sed -i'' 's/RPLC_PROFILE/default/' /var/ossec/etc/ossec.conf
