@@ -51,6 +51,22 @@ sed -i 's/include \$RULE\_PATH/#include \$RULE\_PATH/' /etc/snort/snort.conf
 cp "$DIR/snort.conf.tpl" /etc/snort/snort.conf
 
 snort -T -c /etc/snort/snort.conf
-snort --pcap-dir=/home/foo/pcaps
-sudo snort -A console -q -i <interface> -u snort -g snort -c /etc/snort/snort.conf
-#snort -i <interface> -u snort -g snort -c /etc/snort/snort.conf
+
+cd /
+wget http://download.redis.io/releases/redis-3.2.8.tar.gz
+tar xvfz redis-3.2.8.tar.gz
+cd redis-3.2.8
+make
+cd src
+cp redis-server redis-cli /usr/local/bin
+
+export REDIS_HOST="ossecredis.jyu98g.0001.usw2.cache.amazonaws.com"
+
+while read p; do
+  echo "proc $p"
+  redis-cli -h "$REDIS_HOST" --raw HGET $p pcap | snort -c /etc/snort/snort.conf -r -
+  
+done < ./redis-cli -h "$REDIS_HOST" KEYS "trace*pcap" | awk '{print $1}'
+#trace-h2-ip-172-31-2-100-2017-03-24_14:05:11.pcap
+#trace-h2-ip-172-31-2-100-2017-03-24_14:38:16.pcap
+#trace-h2-ip-172-31-2-100-2017-03-24_14:19:03.pcap
