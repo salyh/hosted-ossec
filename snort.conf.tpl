@@ -101,13 +101,13 @@ ipvar AIM_SERVERS [64.12.24.0/23,64.12.28.0/23,64.12.161.0/24,64.12.163.0/24,64.
 # Path to your rules files (this can be a relative path)
 # Note for Windows users:  You are advised to make this an absolute path,
 # such as:  c:\snort\rules
-var RULE_PATH rules
-var SO_RULE_PATH so_rules
-var PREPROC_RULE_PATH preproc_rules
+var RULE_PATH ../rules
+var SO_RULE_PATH ../so_rules
+var PREPROC_RULE_PATH ../preproc_rules
 
 # If you are using reputation preprocessor set these
-var WHITE_LIST_PATH /etc/snort/rules
-var BLACK_LIST_PATH /etc/snort/rules
+var WHITE_LIST_PATH ../rules
+var BLACK_LIST_PATH ../rules
 
 ###################################################
 # Step #2: Configure the decoder.  For more information, see README.decode
@@ -281,7 +281,7 @@ preprocessor stream5_tcp: policy windows, detect_anomalies, require_3whs 180, \
     ports client 21 22 23 25 42 53 70 79 109 110 111 113 119 135 136 137 139 143 \
         161 445 513 514 587 593 691 1433 1521 1741 2100 3306 6070 6665 6666 6667 6668 6669 \
         7000 8181 32770 32771 32772 32773 32774 32775 32776 32777 32778 32779, \
-    ports both 36 80 81 82 83 84 85 86 87 88 89 90 110 311 383 443 465 563 555 591 593 631 636 801 808 818 901 972 989 992 993 994 995 1158 1220 1414 1533 1741 1830 1942 2231 2301 2381 2578 2809 2980 3029 3037 3057 3128 3443 3702 4000 4343 4848 5000 5117 5250 5450 5600 5814 6080 6173 6988 7907 7000 7001 7005 7071 7144 7145 7510 7802 7770 7777 7778 7779 \
+    ports both 36 80 81 82 83 84 85 86 87 88 89 90 110 311 383 443 465 563 555 591 593 631 636 801 808 818 901 972 989 992 993 994 995 1158 1220 1414 1533 1741 1830 1942 2231 2301 2381 2578 2809 2980 3000 3001 3029 3037 3057 3128 3443 3702 4000 4343 4848 5000 5117 5250 5450 5600 5814 6080 6173 6988 7907 7000 7001 7005 7071 7144 7145 7510 7802 7770 7777 7778 7779 \
         7801 7900 7901 7902 7903 7904 7905 7906 7908 7909 7910 7911 7912 7913 7914 7915 7916 \
         7917 7918 7919 7920 8000 8001 8008 8014 8015 8020 8028 8040 8080 8081 8082 8085 8088 8090 8118 8123 8180 8181 8182 8222 8243 8280 8300 8333 8344 8400 8443 8500 8509 8787 8800 8888 8899 8983 9000 9002 9060 9080 9090 9091 9111 9290 9443 9447 9710 9788 9999 10000 11371 12601 13014 15489 19980 29991 33300 34412 34443 34444 40007 41080 44449 50000 50002 51423 53331 55252 55555 56712
 preprocessor stream5_udp: timeout 180
@@ -321,10 +321,9 @@ preprocessor http_inspect_server: server default \
     multi_slash no \
     utf_8 no \
     u_encode yes \
-    webroot no 
-    #\
-    #decompress_swf { deflate lzma } \
-    #decompress_pdf { deflate }
+    webroot no \
+    decompress_swf { deflate lzma } \
+    decompress_pdf { deflate }
 
 # ONC-RPC normalization and anomaly detection.  For more information, see the Snort Manual, Configuring Snort - Preprocessors - RPC Decode
 preprocessor rpc_decode: 111 32770 32771 32772 32773 32774 32775 32776 32777 32778 32779 no_alert_multiple_requests no_alert_large_fragments no_alert_incomplete
@@ -546,122 +545,122 @@ include reference.config
 include $RULE_PATH/local.rules
 include $RULE_PATH/community.rules
 
-#include $RULE_PATH/app-detect.rules
-#include $RULE_PATH/attack-responses.rules
-#include $RULE_PATH/backdoor.rules
-#include $RULE_PATH/bad-traffic.rules
-#include $RULE_PATH/blacklist.rules
-#include $RULE_PATH/botnet-cnc.rules
-#include $RULE_PATH/browser-chrome.rules
-#include $RULE_PATH/browser-firefox.rules
-#include $RULE_PATH/browser-ie.rules
-#include $RULE_PATH/browser-other.rules
-#include $RULE_PATH/browser-plugins.rules
-#include $RULE_PATH/browser-webkit.rules
-#include $RULE_PATH/chat.rules
-#include $RULE_PATH/content-replace.rules
-#include $RULE_PATH/ddos.rules
-#include $RULE_PATH/dns.rules
-#include $RULE_PATH/dos.rules
-#include $RULE_PATH/experimental.rules
-#include $RULE_PATH/exploit-kit.rules
-#include $RULE_PATH/exploit.rules
-#include $RULE_PATH/file-executable.rules
-#include $RULE_PATH/file-flash.rules
-#include $RULE_PATH/file-identify.rules
-#include $RULE_PATH/file-image.rules
-#include $RULE_PATH/file-java.rules
-#include $RULE_PATH/file-multimedia.rules
-#include $RULE_PATH/file-office.rules
-#include $RULE_PATH/file-other.rules
-#include $RULE_PATH/file-pdf.rules
-#include $RULE_PATH/finger.rules
-#include $RULE_PATH/ftp.rules
-#include $RULE_PATH/icmp-info.rules
-#include $RULE_PATH/icmp.rules
-#include $RULE_PATH/imap.rules
-#include $RULE_PATH/indicator-compromise.rules
-#include $RULE_PATH/indicator-obfuscation.rules
-#include $RULE_PATH/indicator-scan.rules
-#include $RULE_PATH/indicator-shellcode.rules
-#include $RULE_PATH/info.rules
-#include $RULE_PATH/malware-backdoor.rules
-#include $RULE_PATH/malware-cnc.rules
-#include $RULE_PATH/malware-other.rules
-#include $RULE_PATH/malware-tools.rules
-#include $RULE_PATH/misc.rules
-#include $RULE_PATH/multimedia.rules
-#include $RULE_PATH/mysql.rules
-#include $RULE_PATH/netbios.rules
-#include $RULE_PATH/nntp.rules
-#include $RULE_PATH/oracle.rules
-#include $RULE_PATH/os-linux.rules
-#include $RULE_PATH/os-mobile.rules
-#include $RULE_PATH/os-other.rules
-#include $RULE_PATH/os-solaris.rules
-#include $RULE_PATH/os-windows.rules
-#include $RULE_PATH/other-ids.rules
-#include $RULE_PATH/p2p.rules
-#include $RULE_PATH/phishing-spam.rules
-#include $RULE_PATH/policy-multimedia.rules
-#include $RULE_PATH/policy-other.rules
-#include $RULE_PATH/policy.rules
-#include $RULE_PATH/policy-social.rules
-#include $RULE_PATH/policy-spam.rules
-#include $RULE_PATH/pop2.rules
-#include $RULE_PATH/pop3.rules
-#include $RULE_PATH/protocol-dns.rules
-#include $RULE_PATH/protocol-finger.rules
-#include $RULE_PATH/protocol-ftp.rules
-#include $RULE_PATH/protocol-icmp.rules
-#include $RULE_PATH/protocol-imap.rules
-#include $RULE_PATH/protocol-nntp.rules
-#include $RULE_PATH/protocol-other.rules
-#include $RULE_PATH/protocol-pop.rules
-#include $RULE_PATH/protocol-rpc.rules
-#include $RULE_PATH/protocol-scada.rules
-#include $RULE_PATH/protocol-services.rules
-#include $RULE_PATH/protocol-snmp.rules
-#include $RULE_PATH/protocol-telnet.rules
-#include $RULE_PATH/protocol-tftp.rules
-#include $RULE_PATH/protocol-voip.rules
-#include $RULE_PATH/pua-adware.rules
-#include $RULE_PATH/pua-other.rules
-#include $RULE_PATH/pua-p2p.rules
-#include $RULE_PATH/pua-toolbars.rules
-#include $RULE_PATH/rpc.rules
-#include $RULE_PATH/rservices.rules
-#include $RULE_PATH/scada.rules
-#include $RULE_PATH/scan.rules
-#include $RULE_PATH/server-apache.rules
-#include $RULE_PATH/server-iis.rules
-#include $RULE_PATH/server-mail.rules
-#include $RULE_PATH/server-mssql.rules
-#include $RULE_PATH/server-mysql.rules
-#include $RULE_PATH/server-oracle.rules
-#include $RULE_PATH/server-other.rules
-#include $RULE_PATH/server-samba.rules
-#include $RULE_PATH/server-webapp.rules
-#include $RULE_PATH/shellcode.rules
-#include $RULE_PATH/smtp.rules
-#include $RULE_PATH/snmp.rules
-#include $RULE_PATH/specific-threats.rules
-#include $RULE_PATH/spyware-put.rules
-#include $RULE_PATH/sql.rules
-#include $RULE_PATH/telnet.rules
-#include $RULE_PATH/tftp.rules
-#include $RULE_PATH/virus.rules
-#include $RULE_PATH/voip.rules
-#include $RULE_PATH/web-activex.rules
-#include $RULE_PATH/web-attacks.rules
-#include $RULE_PATH/web-cgi.rules
-#include $RULE_PATH/web-client.rules
-#include $RULE_PATH/web-coldfusion.rules
-#include $RULE_PATH/web-frontpage.rules
-#include $RULE_PATH/web-iis.rules
-#include $RULE_PATH/web-misc.rules
-#include $RULE_PATH/web-php.rules
-#include $RULE_PATH/x11.rules
+include $RULE_PATH/app-detect.rules
+include $RULE_PATH/attack-responses.rules
+include $RULE_PATH/backdoor.rules
+include $RULE_PATH/bad-traffic.rules
+include $RULE_PATH/blacklist.rules
+include $RULE_PATH/botnet-cnc.rules
+include $RULE_PATH/browser-chrome.rules
+include $RULE_PATH/browser-firefox.rules
+include $RULE_PATH/browser-ie.rules
+include $RULE_PATH/browser-other.rules
+include $RULE_PATH/browser-plugins.rules
+include $RULE_PATH/browser-webkit.rules
+include $RULE_PATH/chat.rules
+include $RULE_PATH/content-replace.rules
+include $RULE_PATH/ddos.rules
+include $RULE_PATH/dns.rules
+include $RULE_PATH/dos.rules
+include $RULE_PATH/experimental.rules
+include $RULE_PATH/exploit-kit.rules
+include $RULE_PATH/exploit.rules
+include $RULE_PATH/file-executable.rules
+include $RULE_PATH/file-flash.rules
+include $RULE_PATH/file-identify.rules
+include $RULE_PATH/file-image.rules
+include $RULE_PATH/file-java.rules
+include $RULE_PATH/file-multimedia.rules
+include $RULE_PATH/file-office.rules
+include $RULE_PATH/file-other.rules
+include $RULE_PATH/file-pdf.rules
+include $RULE_PATH/finger.rules
+include $RULE_PATH/ftp.rules
+include $RULE_PATH/icmp-info.rules
+include $RULE_PATH/icmp.rules
+include $RULE_PATH/imap.rules
+include $RULE_PATH/indicator-compromise.rules
+include $RULE_PATH/indicator-obfuscation.rules
+include $RULE_PATH/indicator-scan.rules
+include $RULE_PATH/indicator-shellcode.rules
+include $RULE_PATH/info.rules
+include $RULE_PATH/malware-backdoor.rules
+include $RULE_PATH/malware-cnc.rules
+include $RULE_PATH/malware-other.rules
+include $RULE_PATH/malware-tools.rules
+include $RULE_PATH/misc.rules
+include $RULE_PATH/multimedia.rules
+include $RULE_PATH/mysql.rules
+include $RULE_PATH/netbios.rules
+include $RULE_PATH/nntp.rules
+include $RULE_PATH/oracle.rules
+include $RULE_PATH/os-linux.rules
+include $RULE_PATH/os-mobile.rules
+include $RULE_PATH/os-other.rules
+include $RULE_PATH/os-solaris.rules
+include $RULE_PATH/os-windows.rules
+include $RULE_PATH/other-ids.rules
+include $RULE_PATH/p2p.rules
+include $RULE_PATH/phishing-spam.rules
+include $RULE_PATH/policy-multimedia.rules
+include $RULE_PATH/policy-other.rules
+include $RULE_PATH/policy.rules
+include $RULE_PATH/policy-social.rules
+include $RULE_PATH/policy-spam.rules
+include $RULE_PATH/pop2.rules
+include $RULE_PATH/pop3.rules
+include $RULE_PATH/protocol-dns.rules
+include $RULE_PATH/protocol-finger.rules
+include $RULE_PATH/protocol-ftp.rules
+include $RULE_PATH/protocol-icmp.rules
+include $RULE_PATH/protocol-imap.rules
+include $RULE_PATH/protocol-nntp.rules
+include $RULE_PATH/protocol-other.rules
+include $RULE_PATH/protocol-pop.rules
+include $RULE_PATH/protocol-rpc.rules
+include $RULE_PATH/protocol-scada.rules
+include $RULE_PATH/protocol-services.rules
+include $RULE_PATH/protocol-snmp.rules
+include $RULE_PATH/protocol-telnet.rules
+include $RULE_PATH/protocol-tftp.rules
+include $RULE_PATH/protocol-voip.rules
+include $RULE_PATH/pua-adware.rules
+include $RULE_PATH/pua-other.rules
+include $RULE_PATH/pua-p2p.rules
+include $RULE_PATH/pua-toolbars.rules
+include $RULE_PATH/rpc.rules
+include $RULE_PATH/rservices.rules
+include $RULE_PATH/scada.rules
+include $RULE_PATH/scan.rules
+include $RULE_PATH/server-apache.rules
+include $RULE_PATH/server-iis.rules
+include $RULE_PATH/server-mail.rules
+include $RULE_PATH/server-mssql.rules
+include $RULE_PATH/server-mysql.rules
+include $RULE_PATH/server-oracle.rules
+include $RULE_PATH/server-other.rules
+include $RULE_PATH/server-samba.rules
+include $RULE_PATH/server-webapp.rules
+include $RULE_PATH/shellcode.rules
+include $RULE_PATH/smtp.rules
+include $RULE_PATH/snmp.rules
+include $RULE_PATH/specific-threats.rules
+include $RULE_PATH/spyware-put.rules
+include $RULE_PATH/sql.rules
+include $RULE_PATH/telnet.rules
+include $RULE_PATH/tftp.rules
+include $RULE_PATH/virus.rules
+include $RULE_PATH/voip.rules
+include $RULE_PATH/web-activex.rules
+include $RULE_PATH/web-attacks.rules
+include $RULE_PATH/web-cgi.rules
+include $RULE_PATH/web-client.rules
+include $RULE_PATH/web-coldfusion.rules
+include $RULE_PATH/web-frontpage.rules
+include $RULE_PATH/web-iis.rules
+include $RULE_PATH/web-misc.rules
+include $RULE_PATH/web-php.rules
+include $RULE_PATH/x11.rules
 
 ###################################################
 # Step #8: Customize your preprocessor and decoder alerts
