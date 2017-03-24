@@ -8,7 +8,7 @@ set -e
 #apt-get --purge -y remove ossec-hids-agent
 
 
-export OSSEC_MANAGER_IP="54.202.105.97"
+export OSSEC_MANAGER_IP="54.244.48.91"
 #SNORT=1
 
 check_cmd() {
