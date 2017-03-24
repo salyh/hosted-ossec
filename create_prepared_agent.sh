@@ -21,38 +21,6 @@ check_cmd() {
 }
 
 
-
-
-create_cronjob() {
-
-	#cat >/root/tcpdump_cronjob.sh <<'EOF'
-	#!/usr/bin/env bash
-	
-	#PROCESS_NUM=$(ps -ef | grep "tcpdump" | grep -v "grep" | wc -l)
-	
-	
-	
-	#tcpdump -G 5 -C 1 -i any -K -nn -w /root/trace-%Y-%m-%d_%H:%M:%S.pcap &
-	#EOF
-
-	#chmod +x /root/tcpdump_cronjob.sh
-
-	crontab -l > /tmp/rootcron.tmp 2>/dev/null
-
-	if [[ $(cat /tmp/rootcron.tmp) != *"tcpdump_cronjob"* ]]
-	then
-		   echo "* * * * * /usr/bin/flock -w 0 /var/tcpdump.lock $DIR/tcpdmps3.sh" >> /tmp/rootcron.tmp
-		   crontab /tmp/rootcron.tmp
-	else
-		   :
-	fi
-
-	rm -rf /tmp/rootcron.tmp
-
-}
-
-
-
 echo "client $OSSEC_MANAGER_IP" > /client
 
 
@@ -98,7 +66,19 @@ cd "$DIR"
 
 if [ -z "$SNORT" ]; then
    sed -i'' 's/RPLC_PROFILE/default/' /var/ossec/etc/ossec.conf
-   create_cronjob   
+   
+   crontab -l > /tmp/rootcron.tmp 2>/dev/null
+
+	if [[ $(cat /tmp/rootcron.tmp) != *"tcpdmps3"* ]]
+	then
+		   echo "* * * * * /usr/bin/flock -w 1000 /var/tcpdump.lock $DIR/tcpdmps3.sh" >> /tmp/rootcron.tmp
+		   crontab /tmp/rootcron.tmp
+	else
+		   :
+	fi
+
+	rm -rf /tmp/rootcron.tmp
+   
 else
    sed -i'' 's/RPLC_PROFILE/snort/' /var/ossec/etc/ossec.conf
    echo "snort" > /snort_installed
