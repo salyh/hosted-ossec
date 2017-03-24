@@ -49,8 +49,13 @@ cp /snort*/etc/*.map /etc/snort
 #cp /community-rules/* /etc/snort/rules
 #sed -i 's/include \$RULE\_PATH/#include \$RULE\_PATH/' /etc/snort/snort.conf
 
-cp "$DIR/snort_rules/*" /etc/
-cp "$DIR/snort.conf.tpl" /etc/snort/snort.conf
+cd "$DIR/snort_rules"
+cp -a * /etc/
+
+cd /
+
+
+cp -f "$DIR/snort.conf.tpl" /etc/snort/snort.conf
 
 snort -T -c /etc/snort/snort.conf
 
