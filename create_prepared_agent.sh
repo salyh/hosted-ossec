@@ -7,6 +7,10 @@ set -e
 #install latest ossec agent deb/rpm
 #apt-get --purge -y remove ossec-hids-agent
 
+
+OSSEC_MANAGER_IP="54.202.105.97"
+#SNORT=1
+
 check_cmd() {
   if command -v $1 >/dev/null 2>&1
   then
@@ -47,8 +51,6 @@ create_cronjob() {
 
 }
 
-OSSEC_MANAGER_IP="54.191.154.184"
-#SNORT=1
 
 
 echo "client $OSSEC_MANAGER_IP" > /client

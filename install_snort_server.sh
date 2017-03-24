@@ -4,6 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 yum -y install make gcc git flex bison libpcap-devel pcre-devel libdnet-devel.x86_64 zlib-devel libnghttp2-devel --enablerepo=epel
 
 #https://www.upcloud.com/support/installing-snort-on-centos/
+export REDIS_HOST="ossecredis.jyu98g.0001.usw2.cache.amazonaws.com"
 
 cd /
 wget https://www.snort.org/downloads/snort/daq-2.0.6.tar.gz
@@ -60,7 +61,7 @@ make
 cd src
 cp redis-server redis-cli /usr/local/bin
 
-export REDIS_HOST="ossecredis.jyu98g.0001.usw2.cache.amazonaws.com"
+
 
 while true; 
 do  
